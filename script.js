@@ -1,6 +1,7 @@
-const GEMINI_API_KEY = "AIzaSyBEwHGP6nz8QbngnmxnhSbTR3rgkIlj-Gs";
+const GROQ_API_KEY = "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";
 const YOUTUBE_API_KEY = "AIzaSyDjFjGieCcLGgF20bhAM8-oNK-6LDEBRY8";
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
+const GROQ_MODEL = "llama-3.3-70b-versatile";
 
 const syllabus = {
   CBSE: {
@@ -253,33 +254,53 @@ function switchTab(tabId, btn) {
   btn.classList.add('active');
 }
 
-async function callGemini(prompt) {
-  const res = await fetch(GEMINI_URL, {
+async function callGroq(prompt) {
+  const res = await fetch(GROQ_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-  });
-  if (!res.ok) throw new Error(`Gemini API error: ${res.status}`);
-  const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response.';
-}
-
-async function callGeminiWithImage(prompt, base64Image, mimeType) {
-  const res = await fetch(GEMINI_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${GROQ_API_KEY}`
+    },
     body: JSON.stringify({
-      contents: [{
-        parts: [
-          { text: prompt },
-          { inline_data: { mime_type: mimeType, data: base64Image } }
-        ]
-      }]
+      model: GROQ_MODEL,
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 2048,
+      temperature: 0.7
     })
   });
-  if (!res.ok) throw new Error(`Gemini API error: ${res.status}`);
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(`Groq API error: ${res.status} - ${err.error?.message || 'Unknown error'}`);
+  }
   const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response.';
+  return data.choices?.[0]?.message?.content || 'No response.';
+}
+
+async function callGroqWithImage(prompt, base64Image, mimeType) {
+  const res = await fetch(GROQ_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${GROQ_API_KEY}`
+    },
+    body: JSON.stringify({
+      model: 'llama-4-scout-17b-16e-instruct',
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'text', text: prompt },
+          { type: 'image_url', image_url: { url: `data:${mimeType};base64,${base64Image}` } }
+        ]
+      }],
+      max_tokens: 2048
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(`Groq API error: ${res.status} - ${err.error?.message || 'Unknown error'}`);
+  }
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || 'No response.';
 }
 
 async function solveHW() {
@@ -293,7 +314,7 @@ Solve this homework question step by step clearly and in detail:
 "${question}"
 Make the solution easy to understand for a school student.`;
   try {
-    const answer = await callGemini(prompt);
+    const answer = await callGroq(prompt);
     document.getElementById('hw-answer').textContent = answer;
     document.getElementById('hw-result').style.display = 'block';
   } catch(e) {
@@ -324,9 +345,9 @@ async function solveHWPhoto() {
     const base64 = e.target.result.split(',')[1];
     const prompt = `You are an expert teacher for Class ${currentState.cls} ${currentState.board}.
 Subject: ${currentState.subject} | Chapter: ${currentState.chapter}
-Look at this homework image and solve the question step by step clearly.`;
+Look at this homework image and solve the question step by step clearly for the student.`;
     try {
-      const answer = await callGeminiWithImage(prompt, base64, file.type);
+      const answer = await callGroqWithImage(prompt, base64, file.type);
       document.getElementById('hw-answer').textContent = answer;
       document.getElementById('hw-result').style.display = 'block';
     } catch(e) {
@@ -351,13 +372,13 @@ async function loadVideos() {
     `${chapter} ${subject} ${board} easy explanation`
   ];
 
-  const preferredChannels = ['Vedantu','Khan Academy','Physics Wallah','Unacademy','BYJU\'S','Magnet Brains'];
+  const preferredChannels = ['Vedantu','Khan Academy','Physics Wallah','Unacademy','BYJU','Magnet Brains'];
 
   try {
     let allItems = [];
     for (const q of queries) {
       const res = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=${encodeURIComponent(q)}&type=video&relevanceLanguage=en&videoDuration=medium&key=${YOUTUBE_API_KEY}`
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=${encodeURIComponent(q)}&type=video&videoDuration=medium&key=${YOUTUBE_API_KEY}`
       );
       const data = await res.json();
       if (data.items) allItems = allItems.concat(data.items);
@@ -399,7 +420,7 @@ async function loadVideos() {
         list.appendChild(card);
       });
     } else {
-      list.innerHTML = '<p style="color:#94a3b8;text-align:center;padding:1rem">No videos found for this chapter.</p>';
+      list.innerHTML = '<p style="color:#94a3b8;text-align:center;padding:1rem">No videos found.</p>';
     }
 
     document.getElementById('video-loading').style.display = 'none';
@@ -408,7 +429,7 @@ async function loadVideos() {
     document.getElementById('video-loading').style.display = 'none';
     document.getElementById('video-results').style.display = 'block';
     document.getElementById('video-list').innerHTML =
-      '<p style="color:#e74c3c;text-align:center">Error loading videos. Please check your YouTube API key.</p>';
+      '<p style="color:#e74c3c;text-align:center">Error loading videos.</p>';
   }
 }
 
@@ -423,18 +444,18 @@ Class: ${currentState.cls} | Board: ${currentState.board}
 Subject: ${currentState.subject} | Chapter: ${currentState.chapter}
 
 Structure:
-1. Chapter Overview & Introduction
+1. Chapter Overview and Introduction
 2. Key Concepts with clear explanations
-3. Important Definitions & Terms
+3. Important Definitions and Terms
 4. Important Formulas (if applicable)
 5. Solved Examples
 6. Quick Revision Summary
 7. Important Exam Questions (5-10 questions)
 
-Make it comprehensive, exam-focused, and easy to understand for students.`;
+Make it comprehensive, exam-focused, and easy to understand.`;
 
   try {
-    const notes = await callGemini(prompt);
+    const notes = await callGroq(prompt);
     const content = `YOUTHFUL MINDS - Study Notes\n${'='.repeat(50)}\nSubject: ${currentState.subject}\nChapter: ${currentState.chapter}\nClass: ${currentState.cls} | Board: ${currentState.board}\n${'='.repeat(50)}\n\n${notes}`;
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -464,10 +485,10 @@ Subject: ${currentState.subject} | Chapter: ${currentState.chapter}
 Answer this doubt clearly and simply. Use examples if needed. Keep it concise and student-friendly:
 "${question}"`;
   try {
-    const answer = await callGemini(prompt);
+    const answer = await callGroq(prompt);
     thinking.querySelector('.chat-bubble').textContent = answer;
   } catch(e) {
-    thinking.querySelector('.chat-bubble').textContent = '❌ Error occurred. Please try again.';
+    thinking.querySelector('.chat-bubble').textContent = '❌ Error: ' + e.message;
   }
   const chatBox = document.getElementById('chat-box');
   chatBox.scrollTop = chatBox.scrollHeight;
