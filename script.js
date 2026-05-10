@@ -1,9 +1,10 @@
 const GEMINI_API_KEY = "AIzaSyBEwHGP6nz8QbngnmxnhSbTR3rgkIlj-Gs";
 const YOUTUBE_API_KEY = "AIzaSyDjFjGieCcLGgF20bhAM8-oNK-6LDEBRY8";
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 const syllabus = {
   CBSE: {
-    "6th":  {
+    "6th": {
       Mathematics: ["Knowing Our Numbers","Whole Numbers","Playing with Numbers","Basic Geometrical Ideas","Understanding Elementary Shapes","Integers","Fractions","Decimals","Data Handling","Mensuration","Algebra","Ratio and Proportion","Symmetry","Practical Geometry"],
       Science: ["Food: Where Does It Come From?","Components of Food","Fibre to Fabric","Sorting Materials into Groups","Separation of Substances","Changes Around Us","Getting to Know Plants","Body Movements","The Living Organisms","Motion and Measurement","Light, Shadows and Reflections","Electricity and Circuits","Fun with Magnets","Water","Air Around Us","Garbage In, Garbage Out"],
       "Social Science": ["What, Where, How and When?","From Hunting to Growing Food","In the Earliest Cities","What Books and Burials Tell Us","Kingdoms, Kings and an Early Republic","New Questions and Ideas","Ashoka: The Emperor Who Gave Up War","Vital Villages, Thriving Towns","Traders, Kings and Pilgrims","New Empires and Kingdoms","Buildings, Paintings and Books"],
@@ -17,7 +18,7 @@ const syllabus = {
     },
     "8th": {
       Mathematics: ["Rational Numbers","Linear Equations in One Variable","Understanding Quadrilaterals","Practical Geometry","Data Handling","Squares and Square Roots","Cubes and Cube Roots","Comparing Quantities","Algebraic Expressions and Identities","Visualising Solid Shapes","Mensuration","Exponents and Powers","Direct and Inverse Proportions","Factorisation","Introduction to Graphs","Playing with Numbers"],
-      Science: ["Crop Production and Management","Microorganisms: Friend and Foe","Synthetic Fibres and Plastics","Materials: Metals and Non-Metals","Coal and Petroleum","Combustion and Flame","Conservation of Plants and Animals","Cell — Structure and Functions","Reproduction in Animals","Reaching the Age of Adolescence","Force and Pressure","Friction","Sound","Chemical Effects of Electric Current","Some Natural Phenomena","Light","Stars and the Solar System","Pollution of Air and Water"],
+      Science: ["Crop Production and Management","Microorganisms: Friend and Foe","Synthetic Fibres and Plastics","Materials: Metals and Non-Metals","Coal and Petroleum","Combustion and Flame","Conservation of Plants and Animals","Cell Structure and Functions","Reproduction in Animals","Reaching the Age of Adolescence","Force and Pressure","Friction","Sound","Chemical Effects of Electric Current","Some Natural Phenomena","Light","Stars and the Solar System","Pollution of Air and Water"],
       "Social Science": ["How, When and Where","From Trade to Territory","Ruling the Countryside","Tribals, Dikus and the Vision of a Golden Age","When People Rebel","Weavers, Iron Smelters and Factory Owners","Civilising the Native, Educating the Nation","Women, Caste and Reform","The Making of the National Movement","India After Independence"],
       English: ["The Best Christmas Present in the World","The Tsunami","Glimpses of the Past","Bepin Choudhury's Lapse of Memory","The Summit Within","This is Jody's Fawn","A Visit to Cambridge","A Short Monsoon Diary","The Great Stone Face"]
     },
@@ -29,7 +30,7 @@ const syllabus = {
     },
     "10th": {
       Mathematics: ["Real Numbers","Polynomials","Pair of Linear Equations in Two Variables","Quadratic Equations","Arithmetic Progressions","Triangles","Coordinate Geometry","Introduction to Trigonometry","Some Applications of Trigonometry","Circles","Constructions","Areas Related to Circles","Surface Areas and Volumes","Statistics","Probability"],
-      Science: ["Chemical Reactions and Equations","Acids, Bases and Salts","Metals and Non-metals","Carbon and its Compounds","Periodic Classification of Elements","Life Processes","Control and Coordination","How do Organisms Reproduce?","Heredity and Evolution","Light – Reflection and Refraction","Human Eye and Colourful World","Electricity","Magnetic Effects of Electric Current","Sources of Energy","Our Environment","Management of Natural Resources"],
+      Science: ["Chemical Reactions and Equations","Acids, Bases and Salts","Metals and Non-metals","Carbon and its Compounds","Periodic Classification of Elements","Life Processes","Control and Coordination","How do Organisms Reproduce?","Heredity and Evolution","Light Reflection and Refraction","Human Eye and Colourful World","Electricity","Magnetic Effects of Electric Current","Sources of Energy","Our Environment","Management of Natural Resources"],
       "Social Science": ["The Rise of Nationalism in Europe","Nationalism in India","The Making of a Global World","The Age of Industrialisation","Print Culture and the Modern World","Resources and Development","Forest and Wildlife Resources","Water Resources","Agriculture","Minerals and Energy Resources","Manufacturing Industries","Lifelines of National Economy","Power Sharing","Federalism","Democracy and Diversity","Gender, Religion and Caste","Popular Struggles and Movements","Political Parties","Outcomes of Democracy","Challenges to Democracy"],
       English: ["A Letter to God","Nelson Mandela: Long Walk to Freedom","Two Stories about Flying","From the Diary of Anne Frank","Glimpses of India","Mijbil the Otter","Madam Rides the Bus","The Sermon at Benares","The Proposal","A Triumph of Surgery","The Thief's Story","The Midnight Visitor","A Question of Trust","Footprints without Feet","The Making of a Scientist","The Necklace","The Hack Driver","Bholi","The Book That Saved the Earth"]
     },
@@ -41,7 +42,7 @@ const syllabus = {
         Biology: ["The Living World","Biological Classification","Plant Kingdom","Animal Kingdom","Morphology of Flowering Plants","Anatomy of Flowering Plants","Structural Organisation in Animals","Cell: The Unit of Life","Biomolecules","Cell Cycle and Cell Division","Transport in Plants","Mineral Nutrition","Photosynthesis","Respiration in Plants","Plant Growth and Development","Digestion and Absorption","Breathing and Exchange of Gases","Body Fluids and Circulation","Excretory Products","Locomotion and Movement","Neural Control and Coordination","Chemical Coordination and Integration"]
       },
       Commerce: {
-        Accountancy: ["Introduction to Accounting","Theory Base of Accounting","Recording of Transactions I","Recording of Transactions II","Bank Reconciliation Statement","Trial Balance and Rectification of Errors","Depreciation, Provisions and Reserves","Bills of Exchange","Financial Statements I","Financial Statements II","Accounts from Incomplete Records","Applications of Computers in Accounting","Accounting for Not-for-Profit Organisations","Partnership Accounts"],
+        Accountancy: ["Introduction to Accounting","Theory Base of Accounting","Recording of Transactions I","Recording of Transactions II","Bank Reconciliation Statement","Trial Balance and Rectification of Errors","Depreciation, Provisions and Reserves","Bills of Exchange","Financial Statements I","Financial Statements II","Accounts from Incomplete Records","Applications of Computers in Accounting"],
         "Business Studies": ["Nature and Purpose of Business","Forms of Business Organisation","Private, Public and Global Enterprises","Business Services","Emerging Modes of Business","Social Responsibilities of Business","Formation of a Company","Sources of Business Finance","Small Business","Internal Trade","International Business"],
         Economics: ["Indian Economy on the Eve of Independence","Indian Economy 1950-1990","Liberalisation, Privatisation and Globalisation","Poverty","Human Capital Formation","Rural Development","Employment: Growth, Informalisation","Infrastructure","Environment and Sustainable Development","Comparative Development Experiences"],
         Mathematics: ["Sets","Relations and Functions","Trigonometric Functions","Principle of Mathematical Induction","Complex Numbers and Quadratic Equations","Linear Inequalities","Permutations and Combinations","Binomial Theorem","Sequences and Series","Straight Lines","Conic Sections","Introduction to 3D Geometry","Limits and Derivatives","Mathematical Reasoning","Statistics","Probability"]
@@ -69,13 +70,13 @@ const syllabus = {
       Arts: {
         History: ["Bricks, Beads and Bones","Kings, Farmers and Towns","Kinship, Caste and Class","Thinkers, Beliefs and Buildings","Through the Eyes of Travellers","Bhakti-Sufi Traditions","An Imperial Capital: Vijayanagara","Peasants, Zamindars and the State","Kings and Chronicles","Colonialism and the Countryside","Rebels and the Raj","Colonial Cities","Mahatma Gandhi and the Nationalist Movement","Understanding Partition","Framing the Constitution"],
         "Political Science": ["The Cold War Era","The End of Bipolarity","US Hegemony in World Politics","Alternative Centres of Power","Contemporary South Asia","International Organisations","Security in the Contemporary World","Environment and Natural Resources","Globalisation","Challenges of Nation Building","Era of One-Party Dominance","Politics of Planned Development","India's External Relations","Challenges to the Congress System","Crisis of the Constitutional Order","Rise of Popular Movements","Regional Aspirations","Recent Developments in Indian Politics"],
-        Geography: ["Human Geography: Nature and Scope","The World Population","Population Composition","Human Development","Primary Activities","Secondary Activities","Tertiary and Quaternary Activities","Transport and Communication","International Trade","Human Settlements","Population: Distribution, Density, Growth","Migration: Types, Causes and Consequences","Human Development","Human Settlements","Land Resources and Agriculture","Water Resources","Mineral and Energy Resources","Manufacturing Industries","Planning and Sustainable Development","Transport and Communication","International Trade","Geographical Perspective on Selected Issues"],
+        Geography: ["Human Geography: Nature and Scope","The World Population","Population Composition","Human Development","Primary Activities","Secondary Activities","Tertiary and Quaternary Activities","Transport and Communication","International Trade","Human Settlements","Population Distribution, Density, Growth","Migration: Types, Causes and Consequences","Land Resources and Agriculture","Water Resources","Mineral and Energy Resources","Manufacturing Industries","Planning and Sustainable Development"],
         Economics: ["Introduction to Macroeconomics","National Income Accounting","Money and Banking","Determination of Income and Employment","Government Budget and the Economy","Open Economy Macroeconomics","Introduction to Microeconomics","Theory of Consumer Behaviour","Production and Costs","The Theory of the Firm under Perfect Competition","Market Equilibrium","Non-competitive Markets"]
       }
     }
   },
   ICSE: {
-    "6th":  {
+    "6th": {
       Mathematics: ["Number System","Fractions","Decimals","Ratio and Proportion","Percentage","Unitary Method","Profit and Loss","Simple Interest","Algebra","Geometry","Mensuration","Data Handling"],
       Science: ["Matter","Physical and Chemical Changes","Elements, Compounds and Mixtures","Living World","Cells","Human Body","Plants","Environment","Natural Disasters"],
       History: ["Ancient Civilizations","Indus Valley Civilisation","Vedic Age","Mauryan Empire","Gupta Empire"],
@@ -111,7 +112,7 @@ const syllabus = {
       Chemistry: ["Periodic Table","Chemical Bonding","Study of Acids, Bases and Salts","Analytical Chemistry","Mole Concept","Electrolysis","Metallurgy","Study of Compounds","Organic Chemistry"],
       Biology: ["Cell Division","Genetics","Absorption by Roots","Transpiration","Photosynthesis","Chemical Coordination in Plants","The Circulatory System","The Excretory System","The Nervous System","The Endocrine System","The Reproductive System","Population"],
       History: ["The Rise of Nationalism in Europe","The Rise of Nationalism in India","Industrialisation","Nationalism in Indo-China","The Age of Imperialism","World War I","Inter-War Years","World War II","The United Nations","Contemporary World"],
-      Geography: ["Map Work","Natural Regions of the World","Regional Study — South and South East Asia","Regional Study — Africa","Regional Study — North America","Regional Study — Europe"],
+      Geography: ["Map Work","Natural Regions of the World","Regional Study South and South East Asia","Regional Study Africa","Regional Study North America","Regional Study Europe"],
       English: ["Reading Comprehension","Grammar","Writing Skills","Literature","Poetry"]
     },
     "11th": {
@@ -157,12 +158,12 @@ const syllabus = {
   }
 };
 
-let currentState = { cls: '', board: '', stream: '', subject: '', chapter: '' };
+let currentState = { cls:'', board:'', stream:'', subject:'', chapter:'' };
 
 function goToScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
+  window.scrollTo(0,0);
   if (id === 'screen-videos') loadVideos();
 }
 
@@ -172,16 +173,13 @@ function onClassChange() {
   document.getElementById('grp-stream').style.display = is1112 ? 'block' : 'none';
   document.getElementById('grp-subject').style.display = 'none';
   document.getElementById('grp-chapter').style.display = 'none';
-  currentState.stream = '';
-  currentState.subject = '';
-  currentState.chapter = '';
+  currentState.stream = ''; currentState.subject = ''; currentState.chapter = '';
   if (!is1112 && currentState.board) populateSubjects();
 }
 
 function onBoardChange() {
   currentState.board = document.getElementById('sel-board').value;
-  currentState.subject = '';
-  currentState.chapter = '';
+  currentState.subject = ''; currentState.chapter = '';
   document.getElementById('grp-subject').style.display = 'none';
   document.getElementById('grp-chapter').style.display = 'none';
   if (currentState.cls && currentState.cls !== '11th' && currentState.cls !== '12th') populateSubjects();
@@ -189,8 +187,7 @@ function onBoardChange() {
 
 function onStreamChange() {
   currentState.stream = document.getElementById('sel-stream').value;
-  currentState.subject = '';
-  currentState.chapter = '';
+  currentState.subject = ''; currentState.chapter = '';
   document.getElementById('grp-chapter').style.display = 'none';
   populateSubjects();
 }
@@ -199,22 +196,18 @@ function populateSubjects() {
   if (!currentState.board || !currentState.cls) return;
   const boardData = syllabus[currentState.board]?.[currentState.cls];
   if (!boardData) return;
-
   let subjects = [];
   if (currentState.cls === '11th' || currentState.cls === '12th') {
     if (!currentState.stream) return;
-    const streamData = boardData[currentState.stream];
-    subjects = streamData ? Object.keys(streamData) : [];
+    subjects = Object.keys(boardData[currentState.stream] || {});
   } else {
     subjects = Object.keys(boardData);
   }
-
   const sel = document.getElementById('sel-subject');
   sel.innerHTML = '<option value="">-- Choose Subject --</option>';
   subjects.forEach(s => {
-    const opt = document.createElement('option');
-    opt.value = s; opt.textContent = s;
-    sel.appendChild(opt);
+    const o = document.createElement('option');
+    o.value = s; o.textContent = s; sel.appendChild(o);
   });
   document.getElementById('grp-subject').style.display = 'block';
   document.getElementById('grp-chapter').style.display = 'none';
@@ -223,22 +216,18 @@ function populateSubjects() {
 function onSubjectChange() {
   currentState.subject = document.getElementById('sel-subject').value;
   if (!currentState.subject) return;
-
   const boardData = syllabus[currentState.board]?.[currentState.cls];
   let chapters = [];
-
   if (currentState.cls === '11th' || currentState.cls === '12th') {
     chapters = boardData?.[currentState.stream]?.[currentState.subject] || [];
   } else {
     chapters = boardData?.[currentState.subject] || [];
   }
-
   const sel = document.getElementById('sel-chapter');
   sel.innerHTML = '<option value="">-- Choose Chapter --</option>';
   chapters.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c; opt.textContent = c;
-    sel.appendChild(opt);
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c; sel.appendChild(o);
   });
   document.getElementById('grp-chapter').style.display = 'block';
 }
@@ -249,17 +238,11 @@ function proceedToDashboard() {
   currentState.stream  = document.getElementById('sel-stream')?.value || '';
   currentState.subject = document.getElementById('sel-subject').value;
   currentState.chapter = document.getElementById('sel-chapter').value;
-
   if (!currentState.cls || !currentState.board || !currentState.subject || !currentState.chapter) {
-    alert('Please fill all details!');
-    return;
+    alert('Please fill all details!'); return;
   }
-
-  document.getElementById('dash-title').textContent =
-    `${currentState.subject} — ${currentState.chapter}`;
-  document.getElementById('dash-subtitle').textContent =
-    `Class ${currentState.cls} | ${currentState.board}${currentState.stream ? ' | ' + currentState.stream : ''}`;
-
+  document.getElementById('dash-title').textContent = `${currentState.subject} — ${currentState.chapter}`;
+  document.getElementById('dash-subtitle').textContent = `Class ${currentState.cls} | ${currentState.board}${currentState.stream ? ' | '+currentState.stream : ''}`;
   goToScreen('screen-dashboard');
 }
 
@@ -271,59 +254,49 @@ function switchTab(tabId, btn) {
 }
 
 async function callGemini(prompt) {
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-    }
-  );
+  const res = await fetch(GEMINI_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+  });
+  if (!res.ok) throw new Error(`Gemini API error: ${res.status}`);
   const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response received.';
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response.';
 }
 
 async function callGeminiWithImage(prompt, base64Image, mimeType) {
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{
-          parts: [
-            { text: prompt },
-            { inline_data: { mime_type: mimeType, data: base64Image } }
-          ]
-        }]
-      })
-    }
-  );
+  const res = await fetch(GEMINI_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{
+        parts: [
+          { text: prompt },
+          { inline_data: { mime_type: mimeType, data: base64Image } }
+        ]
+      }]
+    })
+  });
+  if (!res.ok) throw new Error(`Gemini API error: ${res.status}`);
   const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response received.';
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response.';
 }
 
 async function solveHW() {
   const question = document.getElementById('hw-text').value.trim();
   if (!question) { alert('Please type your question!'); return; }
-
   document.getElementById('hw-loading').style.display = 'block';
   document.getElementById('hw-result').style.display = 'none';
-
   const prompt = `You are an expert teacher for Class ${currentState.cls} ${currentState.board} students.
-Subject: ${currentState.subject}
-Chapter: ${currentState.chapter}
-
-Solve this homework question step by step in a clear, easy-to-understand way:
+Subject: ${currentState.subject} | Chapter: ${currentState.chapter}
+Solve this homework question step by step clearly and in detail:
 "${question}"
-
-Provide a detailed, well-explained solution appropriate for the student's level.`;
-
+Make the solution easy to understand for a school student.`;
   try {
     const answer = await callGemini(prompt);
     document.getElementById('hw-answer').textContent = answer;
     document.getElementById('hw-result').style.display = 'block';
-  } catch (e) {
+  } catch(e) {
     alert('Error: ' + e.message);
   } finally {
     document.getElementById('hw-loading').style.display = 'none';
@@ -335,8 +308,7 @@ function previewImage(input) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = (e) => {
-    document.getElementById('img-preview').innerHTML =
-      `<img src="${e.target.result}" alt="Homework"/>`;
+    document.getElementById('img-preview').innerHTML = `<img src="${e.target.result}" alt="HW"/>`;
     document.getElementById('btn-solve-photo').style.display = 'block';
   };
   reader.readAsDataURL(file);
@@ -345,23 +317,19 @@ function previewImage(input) {
 async function solveHWPhoto() {
   const file = document.getElementById('hw-file').files[0];
   if (!file) return;
-
   document.getElementById('hw-loading').style.display = 'block';
   document.getElementById('hw-result').style.display = 'none';
-
   const reader = new FileReader();
   reader.onload = async (e) => {
     const base64 = e.target.result.split(',')[1];
-    const mimeType = file.type;
     const prompt = `You are an expert teacher for Class ${currentState.cls} ${currentState.board}.
-Subject: ${currentState.subject}, Chapter: ${currentState.chapter}.
-Look at this homework question in the image and solve it step by step clearly.`;
-
+Subject: ${currentState.subject} | Chapter: ${currentState.chapter}
+Look at this homework image and solve the question step by step clearly.`;
     try {
-      const answer = await callGeminiWithImage(prompt, base64, mimeType);
+      const answer = await callGeminiWithImage(prompt, base64, file.type);
       document.getElementById('hw-answer').textContent = answer;
       document.getElementById('hw-result').style.display = 'block';
-    } catch (e) {
+    } catch(e) {
       alert('Error: ' + e.message);
     } finally {
       document.getElementById('hw-loading').style.display = 'none';
@@ -371,64 +339,78 @@ Look at this homework question in the image and solve it step by step clearly.`;
 }
 
 async function loadVideos() {
-  const chapter = currentState.chapter;
-  const subject = currentState.subject;
-  const cls = currentState.cls;
-  const board = currentState.board;
-
-  document.getElementById('video-chapter-title').textContent =
-    `${subject} — ${chapter}`;
+  const { cls, board, subject, chapter } = currentState;
+  document.getElementById('video-chapter-title').textContent = `${subject} — ${chapter}`;
   document.getElementById('video-loading').style.display = 'block';
   document.getElementById('video-results').style.display = 'none';
-  document.getElementById('notes-loading').style.display = 'none';
+  document.getElementById('notes-title').textContent = `${chapter} Notes`;
 
-  document.getElementById('notes-title').textContent =
-    `${chapter} — Notes`;
+  const queries = [
+    `${board} Class ${cls} ${subject} "${chapter}" explained`,
+    `${subject} ${chapter} Class ${cls} in Hindi`,
+    `${chapter} ${subject} ${board} easy explanation`
+  ];
 
-  const query = `${board} Class ${cls} ${subject} ${chapter} explained`;
+  const preferredChannels = ['Vedantu','Khan Academy','Physics Wallah','Unacademy','BYJU\'S','Magnet Brains'];
 
   try {
-    const res = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&q=${encodeURIComponent(query)}&type=video&relevanceLanguage=en&key=${YOUTUBE_API_KEY}`
-    );
-    const data = await res.json();
+    let allItems = [];
+    for (const q of queries) {
+      const res = await fetch(
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=${encodeURIComponent(q)}&type=video&relevanceLanguage=en&videoDuration=medium&key=${YOUTUBE_API_KEY}`
+      );
+      const data = await res.json();
+      if (data.items) allItems = allItems.concat(data.items);
+    }
 
+    const seen = new Set();
+    const unique = allItems.filter(item => {
+      if (seen.has(item.id.videoId)) return false;
+      seen.add(item.id.videoId); return true;
+    });
+
+    unique.sort((a, b) => {
+      const aScore = preferredChannels.some(c => a.snippet.channelTitle.includes(c)) ? 1 : 0;
+      const bScore = preferredChannels.some(c => b.snippet.channelTitle.includes(c)) ? 1 : 0;
+      return bScore - aScore;
+    });
+
+    const top3 = unique.slice(0, 3);
     const list = document.getElementById('video-list');
     list.innerHTML = '';
 
-    if (data.items && data.items.length > 0) {
-      data.items.forEach(item => {
+    if (top3.length > 0) {
+      top3.forEach(item => {
         const vid = item.id.videoId;
         const title = item.snippet.title;
         const channel = item.snippet.channelTitle;
         const thumb = item.snippet.thumbnails.medium.url;
-
+        const isPreferred = preferredChannels.some(c => channel.includes(c));
         const card = document.createElement('div');
         card.className = 'video-card';
         card.onclick = () => window.open(`https://www.youtube.com/watch?v=${vid}`, '_blank');
         card.innerHTML = `
           <img class="video-thumb" src="${thumb}" alt="${title}"/>
           <div class="video-info">
+            ${isPreferred ? `<span class="video-badge">⭐ Top Channel</span>` : ''}
             <h4>${title}</h4>
             <p>📺 ${channel}</p>
           </div>`;
         list.appendChild(card);
       });
     } else {
-      list.innerHTML = '<p style="color:#94a3b8;text-align:center">No videos found. Try another chapter.</p>';
+      list.innerHTML = '<p style="color:#94a3b8;text-align:center;padding:1rem">No videos found for this chapter.</p>';
     }
 
     document.getElementById('video-loading').style.display = 'none';
     document.getElementById('video-results').style.display = 'block';
-  } catch (e) {
+  } catch(e) {
     document.getElementById('video-loading').style.display = 'none';
     document.getElementById('video-results').style.display = 'block';
     document.getElementById('video-list').innerHTML =
-      '<p style="color:#e74c3c">Error loading videos. Check your YouTube API key.</p>';
+      '<p style="color:#e74c3c;text-align:center">Error loading videos. Please check your YouTube API key.</p>';
   }
 }
-
-let generatedNotesText = '';
 
 async function downloadNotes() {
   const btn = document.getElementById('btn-download-notes');
@@ -436,38 +418,37 @@ async function downloadNotes() {
   btn.textContent = 'Generating...';
   document.getElementById('notes-loading').style.display = 'block';
 
-  const prompt = `Create comprehensive, well-structured study notes for:
+  const prompt = `Create detailed, well-structured study notes for:
 Class: ${currentState.cls} | Board: ${currentState.board}
 Subject: ${currentState.subject} | Chapter: ${currentState.chapter}
 
-Include:
-1. Chapter Overview
+Structure:
+1. Chapter Overview & Introduction
 2. Key Concepts with clear explanations
-3. Important Definitions
+3. Important Definitions & Terms
 4. Important Formulas (if applicable)
-5. Examples
-6. Summary Points
-7. Important Questions to practice
+5. Solved Examples
+6. Quick Revision Summary
+7. Important Exam Questions (5-10 questions)
 
-Make it detailed, student-friendly, and exam-focused.`;
+Make it comprehensive, exam-focused, and easy to understand for students.`;
 
   try {
     const notes = await callGemini(prompt);
-    generatedNotesText = notes;
-
-    const blob = new Blob([notes], { type: 'text/plain' });
+    const content = `YOUTHFUL MINDS - Study Notes\n${'='.repeat(50)}\nSubject: ${currentState.subject}\nChapter: ${currentState.chapter}\nClass: ${currentState.cls} | Board: ${currentState.board}\n${'='.repeat(50)}\n\n${notes}`;
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${currentState.subject}_${currentState.chapter}_Notes.txt`;
+    a.download = `YouthfulMinds_${currentState.subject}_${currentState.chapter}.txt`;
     a.click();
     URL.revokeObjectURL(url);
-  } catch (e) {
+  } catch(e) {
     alert('Error generating notes: ' + e.message);
   } finally {
     document.getElementById('notes-loading').style.display = 'none';
     btn.disabled = false;
-    btn.innerHTML = '<i class="fa fa-download"></i> Download PDF';
+    btn.innerHTML = '<i class="fa fa-download"></i> Download';
   }
 }
 
@@ -475,27 +456,19 @@ async function sendDoubt() {
   const input = document.getElementById('doubt-input');
   const question = input.value.trim();
   if (!question) return;
-
   addChatMsg(question, 'user');
   input.value = '';
-
-  const thinking = addChatMsg('Thinking...', 'ai');
-
-  const prompt = `You are a helpful, friendly AI tutor for Class ${currentState.cls} ${currentState.board} students.
+  const thinking = addChatMsg('⏳ Thinking...', 'ai');
+  const prompt = `You are a friendly, helpful AI tutor for Class ${currentState.cls} ${currentState.board} students at Youthful Minds.
 Subject: ${currentState.subject} | Chapter: ${currentState.chapter}
-
-Answer this student's doubt clearly and simply:
-"${question}"
-
-Keep your answer concise, accurate, and easy to understand for a school student.`;
-
+Answer this doubt clearly and simply. Use examples if needed. Keep it concise and student-friendly:
+"${question}"`;
   try {
     const answer = await callGemini(prompt);
     thinking.querySelector('.chat-bubble').textContent = answer;
-  } catch (e) {
-    thinking.querySelector('.chat-bubble').textContent = 'Sorry, error occurred. Please try again.';
+  } catch(e) {
+    thinking.querySelector('.chat-bubble').textContent = '❌ Error occurred. Please try again.';
   }
-
   const chatBox = document.getElementById('chat-box');
   chatBox.scrollTop = chatBox.scrollHeight;
 }
