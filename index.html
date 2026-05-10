@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EduHelper - Student Platform</title>
+  <title>Youthful Minds</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 </head>
@@ -17,8 +17,8 @@
     <div class="screen active" id="screen-welcome">
       <div class="welcome-wrap">
         <div class="logo-wrap">
-          <div class="logo-icon">🎓</div>
-          <h1>EduHelper</h1>
+          <div class="logo-icon">🧠</div>
+          <h1>Youthful Minds</h1>
           <p>Your Smart Study Partner</p>
         </div>
         <button class="btn-primary" onclick="goToScreen('screen-select')">
@@ -31,6 +31,7 @@
     <div class="screen" id="screen-select">
       <div class="screen-inner">
         <div class="screen-header">
+          <div class="small-logo">🧠 Youthful Minds</div>
           <h2>Tell us about yourself</h2>
           <p>We'll personalize your experience</p>
         </div>
@@ -66,7 +67,7 @@
 
           <div class="form-group" id="grp-subject" style="display:none">
             <label><i class="fa fa-atom"></i> Select Subject</label>
-            <select id="sel-subject" onchange="onSubjectChange()">
+            <select id="sel-subject">
               <option value="">-- Choose Subject --</option>
             </select>
           </div>
@@ -99,24 +100,30 @@
         </div>
 
         <div class="options-grid">
-          <div class="option-card" onclick="goToScreen('screen-hw')">
-            <div class="option-icon" style="background:#fff0f0">📝</div>
-            <h3>Solve H.W</h3>
-            <p>Get homework solved instantly with AI</p>
+          <div class="option-card card-hw" onclick="goToScreen('screen-hw')">
+            <div class="option-icon">📝</div>
+            <div class="option-text">
+              <h3>Solve H.W</h3>
+              <p>Get homework solved instantly with AI</p>
+            </div>
             <span class="option-arrow"><i class="fa fa-arrow-right"></i></span>
           </div>
 
-          <div class="option-card" onclick="goToScreen('screen-videos')">
-            <div class="option-icon" style="background:#f0f8ff">🎥</div>
-            <h3>Videos & Notes</h3>
-            <p>Best videos + downloadable PDF notes</p>
+          <div class="option-card card-video" onclick="goToScreen('screen-videos')">
+            <div class="option-icon">🎥</div>
+            <div class="option-text">
+              <h3>Videos & Notes</h3>
+              <p>Best YouTube videos + AI PDF notes</p>
+            </div>
             <span class="option-arrow"><i class="fa fa-arrow-right"></i></span>
           </div>
 
-          <div class="option-card" onclick="goToScreen('screen-doubt')">
-            <div class="option-icon" style="background:#f0fff4">❓</div>
-            <h3>Ask Doubt</h3>
-            <p>Ask anything, get instant AI answers</p>
+          <div class="option-card card-doubt" onclick="goToScreen('screen-doubt')">
+            <div class="option-icon">❓</div>
+            <div class="option-text">
+              <h3>Ask Doubt</h3>
+              <p>Ask anything, get instant AI answers</p>
+            </div>
             <span class="option-arrow"><i class="fa fa-arrow-right"></i></span>
           </div>
         </div>
@@ -165,16 +172,14 @@
           </button>
         </div>
 
-        <div class="result-box" id="hw-result" style="display:none">
-          <div class="result-header">
-            <span>✅ Solution</span>
-          </div>
-          <div class="result-content" id="hw-answer"></div>
-        </div>
-
         <div class="loading" id="hw-loading" style="display:none">
           <div class="spinner"></div>
           <p>AI is solving your question...</p>
+        </div>
+
+        <div class="result-box" id="hw-result" style="display:none">
+          <div class="result-header"><span>✅ Solution</span></div>
+          <div class="result-content" id="hw-answer"></div>
         </div>
       </div>
     </div>
@@ -194,7 +199,7 @@
 
         <div class="loading" id="video-loading">
           <div class="spinner"></div>
-          <p>Finding best videos...</p>
+          <p>Finding best videos for you...</p>
         </div>
 
         <div id="video-results" style="display:none">
@@ -207,11 +212,11 @@
               <i class="fa fa-file-pdf" style="color:#e74c3c;font-size:2rem"></i>
               <div>
                 <h4 id="notes-title">Chapter Notes</h4>
-                <p>AI Generated • PDF Format</p>
+                <p>AI Generated • Download</p>
               </div>
             </div>
             <button class="btn-download" id="btn-download-notes" onclick="downloadNotes()">
-              <i class="fa fa-download"></i> Download PDF
+              <i class="fa fa-download"></i> Download
             </button>
           </div>
           <div class="loading" id="notes-loading" style="display:none">
@@ -238,14 +243,14 @@
         <div class="chat-box" id="chat-box">
           <div class="chat-msg ai">
             <div class="chat-bubble">
-              👋 Hi! I'm your AI tutor. Ask me anything about your chapter!
+              👋 Hi! I'm your AI tutor from Youthful Minds. Ask me anything about your chapter!
             </div>
           </div>
         </div>
 
         <div class="chat-input-wrap">
           <textarea id="doubt-input" placeholder="Type your doubt here..." rows="2"
-            onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendDoubt();}"></textarea>
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDoubt();}"></textarea>
           <button class="send-btn" onclick="sendDoubt()">
             <i class="fa fa-paper-plane"></i>
           </button>
