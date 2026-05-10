@@ -270,7 +270,7 @@ async function callGroq(prompt) {
   });
   if (!res.ok) {
     const err = await res.json();
-    throw new Error(`Groq API error: ${res.status} - ${err.error?.message || 'Unknown error'}`);
+    throw new Error(`Groq error: ${res.status} - ${err.error?.message || 'Unknown'}`);
   }
   const data = await res.json();
   return data.choices?.[0]?.message?.content || 'No response.';
@@ -297,7 +297,7 @@ async function callGroqWithImage(prompt, base64Image, mimeType) {
   });
   if (!res.ok) {
     const err = await res.json();
-    throw new Error(`Groq API error: ${res.status} - ${err.error?.message || 'Unknown error'}`);
+    throw new Error(`Groq error: ${res.status} - ${err.error?.message || 'Unknown'}`);
   }
   const data = await res.json();
   return data.choices?.[0]?.message?.content || 'No response.';
@@ -310,9 +310,9 @@ async function solveHW() {
   document.getElementById('hw-result').style.display = 'none';
   const prompt = `You are an expert teacher for Class ${currentState.cls} ${currentState.board} students.
 Subject: ${currentState.subject} | Chapter: ${currentState.chapter}
-Solve this homework question step by step clearly and in detail:
+Solve this homework question step by step clearly:
 "${question}"
-Make the solution easy to understand for a school student.`;
+Make it easy to understand for a school student.`;
   try {
     const answer = await callGroq(prompt);
     document.getElementById('hw-answer').textContent = answer;
@@ -345,7 +345,7 @@ async function solveHWPhoto() {
     const base64 = e.target.result.split(',')[1];
     const prompt = `You are an expert teacher for Class ${currentState.cls} ${currentState.board}.
 Subject: ${currentState.subject} | Chapter: ${currentState.chapter}
-Look at this homework image and solve the question step by step clearly for the student.`;
+Look at this homework image and solve the question step by step clearly.`;
     try {
       const answer = await callGroqWithImage(prompt, base64, file.type);
       document.getElementById('hw-answer').textContent = answer;
@@ -367,18 +367,20 @@ async function loadVideos() {
   document.getElementById('notes-title').textContent = `${chapter} Notes`;
 
   const queries = [
-    `${board} Class ${cls} ${subject} "${chapter}" explained`,
-    `${subject} ${chapter} Class ${cls} in Hindi`,
-    `${chapter} ${subject} ${board} easy explanation`
+    `${chapter} ${subject} class ${cls} ${board} Physics Wallah`,
+    `${chapter} ${subject} class ${cls} Khan Academy`,
+    `${chapter} ${subject} class ${cls} Vedantu`,
+    `${chapter} ${subject} class ${cls} Magnet Brains`,
+    `${chapter} ${subject} class ${cls} Next Toppers`,
   ];
 
-  const preferredChannels = ['Vedantu','Khan Academy','Physics Wallah','Unacademy','BYJU','Magnet Brains'];
+  const preferredNames = ['Physics Wallah','PW','Khan Academy','Vedantu','Unacademy','Magnet Brains','BYJU','Next Toppers','Toppers'];
 
   try {
     let allItems = [];
     for (const q of queries) {
       const res = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q=${encodeURIComponent(q)}&type=video&videoDuration=medium&key=${YOUTUBE_API_KEY}`
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&q=${encodeURIComponent(q)}&type=video&videoDuration=medium&key=${YOUTUBE_API_KEY}`
       );
       const data = await res.json();
       if (data.items) allItems = allItems.concat(data.items);
@@ -386,36 +388,36 @@ async function loadVideos() {
 
     const seen = new Set();
     const unique = allItems.filter(item => {
-      if (seen.has(item.id.videoId)) return false;
+      if (!item.id?.videoId || seen.has(item.id.videoId)) return false;
       seen.add(item.id.videoId); return true;
     });
 
     unique.sort((a, b) => {
-      const aScore = preferredChannels.some(c => a.snippet.channelTitle.includes(c)) ? 1 : 0;
-      const bScore = preferredChannels.some(c => b.snippet.channelTitle.includes(c)) ? 1 : 0;
-      return bScore - aScore;
+      const aMatch = preferredNames.some(c => a.snippet.channelTitle.toLowerCase().includes(c.toLowerCase()));
+      const bMatch = preferredNames.some(c => b.snippet.channelTitle.toLowerCase().includes(c.toLowerCase()));
+      return (bMatch ? 1 : 0) - (aMatch ? 1 : 0);
     });
 
-    const top3 = unique.slice(0, 3);
+    const top4 = unique.slice(0, 4);
     const list = document.getElementById('video-list');
     list.innerHTML = '';
 
-    if (top3.length > 0) {
-      top3.forEach(item => {
+    if (top4.length > 0) {
+      top4.forEach((item, index) => {
         const vid = item.id.videoId;
         const title = item.snippet.title;
         const channel = item.snippet.channelTitle;
-        const thumb = item.snippet.thumbnails.medium.url;
-        const isPreferred = preferredChannels.some(c => channel.includes(c));
+        const thumb = item.snippet.thumbnails.medium?.url || `https://i.ytimg.com/vi/${vid}/mqdefault.jpg`;
+        const isTop = preferredNames.some(c => channel.toLowerCase().includes(c.toLowerCase()));
         const card = document.createElement('div');
         card.className = 'video-card';
         card.onclick = () => window.open(`https://www.youtube.com/watch?v=${vid}`, '_blank');
         card.innerHTML = `
-          <img class="video-thumb" src="${thumb}" alt="${title}"/>
+          <img class="video-thumb" src="${thumb}" alt="${title}" onerror="this.src='https://i.ytimg.com/vi/${vid}/mqdefault.jpg'"/>
           <div class="video-info">
-            ${isPreferred ? `<span class="video-badge">⭐ Top Channel</span>` : ''}
+            ${isTop ? `<span class="video-badge">⭐ Top Educator</span>` : `<span class="video-badge" style="background:rgba(255,255,255,0.08);color:#94a3b8">#${index+1}</span>`}
             <h4>${title}</h4>
-            <p>📺 ${channel}</p>
+            <p>📺 ${channel} &nbsp;•&nbsp; 🔗 Click to Watch</p>
           </div>`;
         list.appendChild(card);
       });
@@ -428,8 +430,7 @@ async function loadVideos() {
   } catch(e) {
     document.getElementById('video-loading').style.display = 'none';
     document.getElementById('video-results').style.display = 'block';
-    document.getElementById('video-list').innerHTML =
-      '<p style="color:#e74c3c;text-align:center">Error loading videos.</p>';
+    document.getElementById('video-list').innerHTML = `<p style="color:#e74c3c;text-align:center">Error: ${e.message}</p>`;
   }
 }
 
@@ -439,39 +440,81 @@ async function downloadNotes() {
   btn.textContent = 'Generating...';
   document.getElementById('notes-loading').style.display = 'block';
 
+  const existingViewer = document.getElementById('notes-viewer');
+  if (existingViewer) existingViewer.remove();
+
   const prompt = `Create detailed, well-structured study notes for:
 Class: ${currentState.cls} | Board: ${currentState.board}
 Subject: ${currentState.subject} | Chapter: ${currentState.chapter}
 
-Structure:
-1. Chapter Overview and Introduction
-2. Key Concepts with clear explanations
-3. Important Definitions and Terms
-4. Important Formulas (if applicable)
-5. Solved Examples
-6. Quick Revision Summary
-7. Important Exam Questions (5-10 questions)
+Use this EXACT structure:
+# ${currentState.chapter} - Complete Notes
 
-Make it comprehensive, exam-focused, and easy to understand.`;
+## 1. Chapter Overview
+## 2. Key Concepts
+## 3. Important Definitions
+## 4. Important Formulas
+## 5. Solved Examples
+## 6. Quick Revision Points
+## 7. Important Exam Questions
+
+Make it detailed, exam-focused, and student-friendly.`;
 
   try {
     const notes = await callGroq(prompt);
-    const content = `YOUTHFUL MINDS - Study Notes\n${'='.repeat(50)}\nSubject: ${currentState.subject}\nChapter: ${currentState.chapter}\nClass: ${currentState.cls} | Board: ${currentState.board}\n${'='.repeat(50)}\n\n${notes}`;
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `YouthfulMinds_${currentState.subject}_${currentState.chapter}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-  } catch(e) {
-    alert('Error generating notes: ' + e.message);
-  } finally {
     document.getElementById('notes-loading').style.display = 'none';
+
+    const formatted = notes
+      .replace(/^# (.+)$/gm, '<h1 style="font-size:1.4rem;font-weight:800;color:#a78bfa;margin:0 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid rgba(167,139,250,0.3)">$1</h1>')
+      .replace(/^## (.+)$/gm, '<h2 style="font-size:1rem;font-weight:700;color:#60a5fa;margin:1.4rem 0 0.6rem;background:rgba(96,165,250,0.1);padding:6px 14px;border-radius:20px;display:inline-block">$1</h2><div style="clear:both"></div>')
+      .replace(/^### (.+)$/gm, '<h3 style="font-size:0.95rem;font-weight:700;color:#34d399;margin:1rem 0 0.4rem">$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong style="color:#fbbf24">$1</strong>')
+      .replace(/^[-•] (.+)$/gm, '<div style="display:flex;gap:8px;margin:0.3rem 0;align-items:flex-start"><span style="color:#a78bfa;flex-shrink:0;margin-top:3px">▸</span><span style="color:#cbd5e1;line-height:1.7">$1</span></div>')
+      .replace(/^\d+\. (.+)$/gm, '<div style="display:flex;gap:8px;margin:0.35rem 0"><span style="color:#60a5fa;font-weight:700;flex-shrink:0">•</span><span style="color:#cbd5e1;line-height:1.7">$1</span></div>')
+      .replace(/\n\n/g, '<br/>')
+      .replace(/\n/g, '<br/>');
+
+    const viewer = document.createElement('div');
+    viewer.id = 'notes-viewer';
+    viewer.style.cssText = 'margin-top:1.5rem;background:linear-gradient(135deg,#1a1040,#0d1b2a);border:1px solid rgba(167,139,250,0.3);border-radius:20px;overflow:hidden;animation:fadeIn 0.4s ease';
+
+    viewer.innerHTML = `
+      <div style="background:rgba(255,255,255,0.05);padding:1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem">
+        <div>
+          <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:2px">📄 Youthful Minds Study Notes</div>
+          <div style="font-size:1rem;font-weight:700;color:#e2e8f0">${currentState.subject} — ${currentState.chapter}</div>
+          <div style="font-size:0.78rem;color:#94a3b8;margin-top:2px">Class ${currentState.cls} | ${currentState.board}</div>
+        </div>
+        <button onclick="downloadNotesFile()" style="padding:0.55rem 1.2rem;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:white;border:none;border-radius:10px;font-size:0.85rem;font-weight:600;cursor:pointer">⬇️ Download</button>
+      </div>
+      <div style="padding:1.5rem 1.8rem;font-family:'Segoe UI',sans-serif;line-height:1.8;max-height:560px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(167,139,250,0.4) transparent;font-size:0.93rem">
+        ${formatted}
+      </div>`;
+
+    document.getElementById('video-results').appendChild(viewer);
+    viewer.scrollIntoView({ behavior:'smooth', block:'start' });
+
+    window._notesRawText = `YOUTHFUL MINDS - Study Notes\n${'='.repeat(50)}\nSubject: ${currentState.subject}\nChapter: ${currentState.chapter}\nClass: ${currentState.cls} | Board: ${currentState.board}\n${'='.repeat(50)}\n\n${notes}`;
+
+  } catch(e) {
+    alert('Error: ' + e.message);
+    document.getElementById('notes-loading').style.display = 'none';
+  } finally {
     btn.disabled = false;
-    btn.innerHTML = '<i class="fa fa-download"></i> Download';
+    btn.innerHTML = '<i class="fa fa-download"></i> View Notes';
   }
 }
+
+window.downloadNotesFile = function() {
+  if (!window._notesRawText) return;
+  const blob = new Blob([window._notesRawText], { type:'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `YouthfulMinds_${currentState.subject}_${currentState.chapter}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
 
 async function sendDoubt() {
   const input = document.getElementById('doubt-input');
@@ -480,9 +523,9 @@ async function sendDoubt() {
   addChatMsg(question, 'user');
   input.value = '';
   const thinking = addChatMsg('⏳ Thinking...', 'ai');
-  const prompt = `You are a friendly, helpful AI tutor for Class ${currentState.cls} ${currentState.board} students at Youthful Minds.
+  const prompt = `You are a friendly AI tutor for Class ${currentState.cls} ${currentState.board} at Youthful Minds.
 Subject: ${currentState.subject} | Chapter: ${currentState.chapter}
-Answer this doubt clearly and simply. Use examples if needed. Keep it concise and student-friendly:
+Answer this doubt clearly, simply, with examples if needed:
 "${question}"`;
   try {
     const answer = await callGroq(prompt);
@@ -490,8 +533,7 @@ Answer this doubt clearly and simply. Use examples if needed. Keep it concise an
   } catch(e) {
     thinking.querySelector('.chat-bubble').textContent = '❌ Error: ' + e.message;
   }
-  const chatBox = document.getElementById('chat-box');
-  chatBox.scrollTop = chatBox.scrollHeight;
+  document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
 }
 
 function addChatMsg(text, role) {
